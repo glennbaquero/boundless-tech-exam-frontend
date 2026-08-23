@@ -3,24 +3,75 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  --color-gold-50: #fbf9f2;
+  --color-gold-100: #f3e9c6;
+  --color-gold-300: #d9bb6f;
+  --color-gold-400: #d9bd66;
+  --color-gold-500: #c9a83a;
+  --color-gold-600: #ad8b2e;
+  --color-gold-700: #8f6f30;
+
+  --color-purple-600: #575db4;
+
+  --color-slate-400: #8b93b0;
+
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e8e8e8;
+  --color-gray-300: #d7d7dc;
+  --color-gray-400: #a4a4ad;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #54545c;
+  --color-gray-700: #3f3f46;
+  --color-gray-900: #111827;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --font-sans: var(--font-nunito);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-gold-50: var(--color-gold-50);
+  --color-gold-100: var(--color-gold-100);
+  --color-gold-300: var(--color-gold-300);
+  --color-gold-400: var(--color-gold-400);
+  --color-gold-500: var(--color-gold-500);
+  --color-gold-600: var(--color-gold-600);
+  --color-gold-700: var(--color-gold-700);
+  --color-purple-600: var(--color-purple-600);
+  --color-slate-400: var(--color-slate-400);
+  --color-gray-50: var(--color-gray-50);
+  --color-gray-100: var(--color-gray-100);
+  --color-gray-200: var(--color-gray-200);
+  --color-gray-300: var(--color-gray-300);
+  --color-gray-400: var(--color-gray-400);
+  --color-gray-500: var(--color-gray-500);
+  --color-gray-600: var(--color-gray-600);
+  --color-gray-700: var(--color-gray-700);
+  --color-gray-900: var(--color-gray-900);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
 }
+
+/* Hide native date/time picker icon so we can render our own gold icon in the same spot */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+input[type="date"],
+input[type="time"] {
+  position: relative;
+}
+
