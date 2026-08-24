@@ -1,5 +1,4 @@
-import { STORAGE_KEYS } from "@/constants/storage";
-import { isBrowser } from "@/constants/url";
+import { postData } from "@/constants/api";
 
 export interface Customer {
   phone: string;
@@ -8,28 +7,22 @@ export interface Customer {
   email: string;
 }
 
-function readCustomers(): Record<string, Customer> {
-  if (!isBrowser) return {};
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEYS.CUSTOMERS) ?? "{}");
-  } catch {
-    return {};
-  }
+interface CustomerLookupResponse {
+  recognized: boolean;
+  first_name?: string;
+  last_name?: string;
+  email?: string | null;
 }
 
-function writeCustomers(customers: Record<string, Customer>) {
-  if (!isBrowser) return;
-  localStorage.setItem(STORAGE_KEYS.CUSTOMERS, JSON.stringify(customers));
-}
+export async function lookupCustomerByPhone(phone: string): Promise<Customer | null> {
+  const response = await postData<CustomerLookupResponse>("/customers/lookup", { phone });
 
-/** Mock "on file" lookup. In a real system this would be a backend call keyed by phone. */
-export function lookupCustomerByPhone(phone: string): Customer | null {
-  const customers = readCustomers();
-  return customers[phone] ?? null;
-}
+  if (!response.recognized) return null;
 
-export function saveCustomer(customer: Customer) {
-  const customers = readCustomers();
-  customers[customer.phone] = customer;
-  writeCustomers(customers);
+  return {
+    phone,
+    firstName: response.first_name ?? "",
+    lastName: response.last_name ?? "",
+    email: response.email ?? "",
+  };
 }

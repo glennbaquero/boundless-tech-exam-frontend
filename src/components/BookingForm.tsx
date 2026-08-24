@@ -12,8 +12,9 @@ import {
   type LocationMode,
   type TripType,
 } from "@/types/booking";
-import { lookupCustomerByPhone, saveCustomer, type Customer } from "@/utils/customers";
+import { lookupCustomerByPhone, type Customer } from "@/utils/customers";
 import { submitBooking } from "@/utils/bookings";
+import { onError } from "@/utils/errorHandler";
 import { getDistanceAndDuration, mapsProvider, type ResolvedPlace, type DistanceResult } from "@/utils/maps";
 import { useDebouncedValue } from "@/utils/useDebouncedValue";
 import { formatTime12h } from "@/utils/formatTime";
@@ -67,6 +68,7 @@ export default function BookingForm() {
   });
 
   const [stops, setStops] = useState<string[]>([]);
+  const [stopPlaces, setStopPlaces] = useState<(ResolvedPlace | null)[]>([]);
   const [pickupPlace, setPickupPlace] = useState<ResolvedPlace | null>(null);
   const [dropoffPlace, setDropoffPlace] = useState<ResolvedPlace | null>(null);
   const [route, setRoute] = useState<DistanceResult | null>(null);
@@ -92,20 +94,34 @@ export default function BookingForm() {
       setPhoneLookup("idle");
       return;
     }
+    let cancelled = false;
     setPhoneLookup("checking");
-    const found = lookupCustomerByPhone(parsed.number);
-    if (found) {
-      knownCustomerRef.current = true;
-      setCustomer(found);
-      setValue("firstName", found.firstName);
-      setValue("lastName", found.lastName);
-      setValue("email", found.email);
-      setPhoneLookup("found");
-    } else {
-      knownCustomerRef.current = false;
-      setCustomer(null);
-      setPhoneLookup("not-found");
-    }
+    lookupCustomerByPhone(parsed.number)
+      .then((found) => {
+        if (cancelled) return;
+        if (found) {
+          knownCustomerRef.current = true;
+          setCustomer(found);
+          setValue("firstName", found.firstName);
+          setValue("lastName", found.lastName);
+          setValue("email", found.email);
+          setPhoneLookup("found");
+        } else {
+          knownCustomerRef.current = false;
+          setCustomer(null);
+          setPhoneLookup("not-found");
+        }
+      })
+      .catch((error) => {
+        if (cancelled) return;
+        onError(error);
+        knownCustomerRef.current = false;
+        setCustomer(null);
+        setPhoneLookup("not-found");
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [debouncedPhone, setValue]);
 
   useEffect(() => {
@@ -127,6 +143,7 @@ export default function BookingForm() {
 
   function addStop() {
     setStops((prev) => [...prev, ""]);
+    setStopPlaces((prev) => [...prev, null]);
   }
 
   function updateStop(index: number, text: string) {
@@ -134,6 +151,19 @@ export default function BookingForm() {
       const next = [...prev];
       next[index] = text;
       setValue("stops", next);
+      return next;
+    });
+    setStopPlaces((prev) => {
+      const next = [...prev];
+      next[index] = null;
+      return next;
+    });
+  }
+
+  function selectStopPlace(index: number, place: ResolvedPlace) {
+    setStopPlaces((prev) => {
+      const next = [...prev];
+      next[index] = place;
       return next;
     });
   }
@@ -149,36 +179,37 @@ export default function BookingForm() {
         pickupTime: values.pickupTime,
         pickupType: values.pickupType,
         pickupLocation: values.pickupLocation,
-        stops: stops.filter(Boolean),
+        pickupLat: pickupPlace?.lat,
+        pickupLng: pickupPlace?.lng,
+        stops: stops
+          .map((location, index) => ({
+            location,
+            lat: stopPlaces[index]?.lat,
+            lng: stopPlaces[index]?.lng,
+          }))
+          .filter((stop) => stop.location.trim().length > 0),
         dropoffType: values.dropoffType,
         dropoffLocation: values.dropoffLocation,
+        dropoffLat: dropoffPlace?.lat,
+        dropoffLng: dropoffPlace?.lng,
         phone: e164,
         firstName: values.firstName || customer?.firstName || "",
         lastName: values.lastName || customer?.lastName || "",
         email: values.email || customer?.email || "",
         passengers: values.passengers,
-        distanceText: route?.distanceText,
-        durationText: route?.durationText,
       });
-
-      if (phoneLookup !== "found") {
-        saveCustomer({
-          phone: e164,
-          firstName: values.firstName,
-          lastName: values.lastName,
-          email: values.email,
-        });
-      }
 
       toast.success(`Booking request received! Confirmation ${response.id}.`);
       reset();
       setStops([]);
+      setStopPlaces([]);
       setPickupPlace(null);
       setDropoffPlace(null);
       setRoute(null);
       setPhoneLookup("idle");
       setCustomer(null);
-    } catch {
+    } catch (error) {
+      onError(error);
       toast.error("Something went wrong submitting your booking. Please try again.");
     }
   });
@@ -197,7 +228,6 @@ export default function BookingForm() {
           ]}
         />
 
-        {/* Pickup */}
         <section>
           <h2 className="mb-3 text-base font-semibold text-gray-900">Pickup</h2>
 
@@ -276,7 +306,7 @@ export default function BookingForm() {
                 placeholder="Enter stop address"
                 value={stop}
                 onTextChange={(text) => updateStop(index, text)}
-                onSelect={() => {}}
+                onSelect={(place) => selectStopPlace(index, place)}
               />
             </div>
           ))}
@@ -290,7 +320,6 @@ export default function BookingForm() {
           </button>
         </section>
 
-        {/* Drop off */}
         <section>
           <h2 className="mb-3 text-base font-semibold text-gray-900">Drop off</h2>
 
@@ -341,7 +370,6 @@ export default function BookingForm() {
           )}
         </section>
 
-        {/* Contact Information */}
         <section>
           <h2 className="mb-3 text-base font-semibold text-gray-900">Contact Information</h2>
 

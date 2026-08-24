@@ -1,4 +1,3 @@
-/** Formats a 24h "HH:mm" value (from a native time input) as "h:mm AM/PM". */
 export function formatTime12h(time24: string): string {
   const [hStr, mStr] = time24.split(":");
   const h = Number(hStr);
