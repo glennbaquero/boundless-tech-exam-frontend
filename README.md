@@ -1,4 +1,4 @@
-This is the **Caravea** booking frontend, a [Next.js](https://nextjs.org) app bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app). It renders the booking form UI and submits bookings to a Laravel backend API.
+This is the **Boundless Limousine** booking frontend, a [Next.js](https://nextjs.org) app bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app). It renders the booking form UI and submits bookings to a Laravel backend API.
 
 ## Getting Started
 
