@@ -3,22 +3,14 @@ import type { ReactNode } from "react";
 interface FieldShellProps {
   label?: string;
   icon?: ReactNode;
-  /** Pass a message to show it under the field, or `true` to just highlight the border. */
   error?: string | boolean;
   trailing?: ReactNode;
   className?: string;
-  /** Override the default border color (e.g. a darker border for the pickup date field). */
   borderClassName?: string;
-  /** Override the default box padding (e.g. the taller pickup date/time fields). */
   paddingClassName?: string;
   children: ReactNode;
 }
 
-/**
- * Bordered input shell with a floating label notched into the top border line
- * (matches the reference design, where the label sits on the box outline rather
- * than above it).
- */
 export default function FieldShell({
   label,
   icon,

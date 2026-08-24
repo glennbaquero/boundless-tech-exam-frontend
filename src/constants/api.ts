@@ -6,4 +6,9 @@ const getData = async <T>(path: string): Promise<T> => {
   return data;
 };
 
-export { getData };
+const postData = async <T>(path: string, payload: unknown): Promise<T> => {
+  const { data } = await axios.post<T>(`${STAGING_URL}${path}`, payload);
+  return data;
+};
+
+export { getData, postData };

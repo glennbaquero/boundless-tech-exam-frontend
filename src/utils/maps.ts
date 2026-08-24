@@ -20,12 +20,6 @@ export interface DistanceResult {
 
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
-/**
- * Google Maps requires a billed API key. When one isn't configured (e.g. local/demo
- * environments) we transparently fall back to free, keyless services (Nominatim for
- * search/geocoding, OSRM's public demo router for distance + travel time) so the
- * feature still works end to end.
- */
 export const mapsProvider: "google" | "osm" = GOOGLE_MAPS_API_KEY ? "google" : "osm";
 
 let optionsInitialized = false;
@@ -147,8 +141,6 @@ async function getDistanceGoogle(origin: ResolvedPlace, destination: ResolvedPla
   });
 }
 
-// --- Free fallback: OpenStreetMap Nominatim (search) + OSRM demo router (distance) ---
-
 interface NominatimResult {
   place_id: number;
   display_name: string;
@@ -206,8 +198,6 @@ async function getDistanceOSM(origin: ResolvedPlace, destination: ResolvedPlace)
     return null;
   }
 }
-
-// --- Public API (provider-agnostic) ---
 
 export async function searchPlaces(query: string): Promise<PlaceSuggestion[]> {
   if (query.trim().length < 3) return [];

@@ -6,11 +6,6 @@ export type LocationMode = "location" | "airport";
 
 const todayISO = () => new Date().toISOString().slice(0, 10);
 
-/**
- * `isKnownCustomer` is read lazily (as a getter) rather than baked into the schema so a
- * single schema/resolver instance can react to the phone-lookup result without being
- * rebuilt on every render.
- */
 export function buildBookingSchema(isKnownCustomer: () => boolean) {
   return z
     .object({
