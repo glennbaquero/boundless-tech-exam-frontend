@@ -387,7 +387,7 @@ export default function BookingForm() {
 
           {phoneLookup === "not-found" && (
             <>
-              <p className="mt-2 text-xs tracking-tight text-gray-500">
+              <p className="mt-2 text-[13.99px] tracking-tight text-gray-500">
                 We don&apos;t have that phone number on file. Please provide additional contact information.
               </p>
 
