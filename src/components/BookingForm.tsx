@@ -216,7 +216,7 @@ export default function BookingForm() {
 
   return (
     <div className="mx-auto w-full max-w-[560px] px-5 pb-8 sm:pb-12">
-      <h1 className="mb-6 text-xl font-medium leading-snug text-gray-900">Let&apos;s get you on your way!</h1>
+      <h1 className="mb-6 text-[1.4rem] font-medium leading-snug text-gray-900">Let&apos;s get you on your way!</h1>
 
       <form onSubmit={onSubmit} noValidate className="space-y-6">
         <SegmentedToggle
