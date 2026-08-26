@@ -458,7 +458,7 @@ export default function BookingForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-b from-gold-500 to-gold-600 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:from-gold-600 hover:to-gold-700 disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-gold-500 py-3 text-sm font-semibold text-white transition-colors hover:bg-gold-600 disabled:opacity-60"
         >
           {isSubmitting && <SpinnerIcon className="h-4 w-4" />}
           Continue
