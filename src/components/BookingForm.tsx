@@ -234,7 +234,6 @@ export default function BookingForm() {
           <div className="mb-3 flex gap-2">
             <FieldShell
               className="w-[232px] min-w-0"
-              borderClassName="border-gray-400 focus-within:border-gold-500"
               paddingClassName="px-3 py-4"
               icon={<CalendarIcon className="h-4 w-4 shrink-0 text-gold-500" />}
               error={!!errors.pickupDate}
@@ -440,6 +439,7 @@ export default function BookingForm() {
           <div className="mt-4">
             <p className="mb-3 text-sm text-gray-900">How many passengers are expected for the trip?</p>
             <FieldShell
+              className="w-[180px] min-w-0"
               label="# Passengers"
               icon={<HashIcon className="h-4 w-4 shrink-0 text-gold-500" />}
               error={errors.passengers?.message}
@@ -458,7 +458,7 @@ export default function BookingForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-b from-gold-500 to-gold-600 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:from-gold-600 hover:to-gold-700 disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-gold-500 py-3 text-sm font-semibold text-white transition-colors hover:bg-gold-600 disabled:opacity-60"
         >
           {isSubmitting && <SpinnerIcon className="h-4 w-4" />}
           Continue
