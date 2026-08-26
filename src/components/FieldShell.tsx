@@ -27,7 +27,7 @@ export default function FieldShell({
         className={[
           "relative flex items-center gap-2 rounded-lg border bg-white",
           paddingClassName ?? "px-3 py-2",
-          error ? "border-red-400" : (borderClassName ?? "border-gray-200 focus-within:border-gold-500"),
+          error ? "border-red-400" : (borderClassName ?? "border-gray-300 focus-within:border-gold-500"),
         ].join(" ")}
       >
         {label && (

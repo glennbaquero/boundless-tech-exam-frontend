@@ -234,7 +234,6 @@ export default function BookingForm() {
           <div className="mb-3 flex gap-2">
             <FieldShell
               className="w-[232px] min-w-0"
-              borderClassName="border-gray-400 focus-within:border-gold-500"
               paddingClassName="px-3 py-4"
               icon={<CalendarIcon className="h-4 w-4 shrink-0 text-gold-500" />}
               error={!!errors.pickupDate}
@@ -440,6 +439,7 @@ export default function BookingForm() {
           <div className="mt-4">
             <p className="mb-3 text-sm text-gray-900">How many passengers are expected for the trip?</p>
             <FieldShell
+              className="w-[180px] min-w-0"
               label="# Passengers"
               icon={<HashIcon className="h-4 w-4 shrink-0 text-gold-500" />}
               error={errors.passengers?.message}
